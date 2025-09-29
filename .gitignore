@@ -1,5 +1,5 @@
 # 忽略 download 資料夾
-download/
+downloads/
 
 # 忽略單一檔案
 YouTube_Download.exe
