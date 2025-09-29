@@ -6,6 +6,12 @@ import subprocess
 import platform
 import threading
 
+# ✅ 啟動時自動嘗試更新 yt-dlp（避免因 YouTube 改格式而下載失敗）
+try:
+    subprocess.run(["python", "-m", "pip", "install", "-U", "yt-dlp"], check=False)
+except Exception:
+    pass
+
 # 全局變數以存儲下載的檔案路徑
 downloaded_file = ""
 downloading = False  # 追蹤下載狀態
@@ -105,9 +111,9 @@ def open_file_location():
     else:
         subprocess.run(["xdg-open", directory])
 
-# 設置 yt-dlp 下載選項
+# ✅ yt-dlp 下載設定（自動選擇最佳畫質）
 ydl_opts = {
-    'format': 'bestvideo[height>=720]+bestaudio/best[height>=720]',
+    'format': 'bestvideo+bestaudio/best',  # ✅ 兼容所有畫質
     'outtmpl': 'downloads/%(title)s.%(ext)s',
     'socket_timeout': 60,
     'retries': 10,
@@ -144,6 +150,9 @@ url_label.pack(pady=(0, 10))
 
 url_entry = tk.Entry(main_frame, width=80, font=font_large)
 url_entry.pack(pady=(0, 20))
+
+# ✅ 新增 Enter 鍵啟動下載
+url_entry.bind("<Return>", lambda event: download_video())
 
 # === 新增右鍵選單功能 ===
 context_menu = tk.Menu(root, tearoff=0)
